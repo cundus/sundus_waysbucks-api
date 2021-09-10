@@ -9,8 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Topping.belongsToMany(models.TransactionProduct, {
-        through: "TransactionTopping",
+      Topping.hasMany(models.TransactionTopping, {
+        as: "TransactionTopping",
+        foreignKey: {
+          name: "toppingId",
+        },
       });
     }
   }
@@ -23,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Topping",
-      tableName: "toppings",
+      tableName: "Toppings",
     }
   );
   return Topping;

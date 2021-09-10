@@ -20,10 +20,8 @@ exports.register = async (req, res) => {
 
     if (error) {
       return res.status(400).send({
-        status: "input validation error",
-        error: {
-          message: error.details[0].message,
-        },
+        status: "failed",
+        message: error.details[0].message,
       });
     }
 
@@ -32,8 +30,8 @@ exports.register = async (req, res) => {
 
     if (emailCheck) {
       return res.status(400).send({
-        status: "email already registered",
-        data: [],
+        status: "failed",
+        message: "email already registered",
       });
     }
 
@@ -56,10 +54,8 @@ exports.register = async (req, res) => {
       status: "success",
       message: "resource successfully create user",
       data: {
-        user: {
-          email: dataUser.email,
-          token,
-        },
+        email: dataUser.email,
+        token,
       },
     });
   } catch (error) {
@@ -84,7 +80,7 @@ exports.login = async (req, res) => {
     const { error } = schema.validate(userData);
 
     if (error) {
-      return res.status(200).send({
+      return res.status(400).send({
         status: "failed",
         message: error.details[0].message,
       });
@@ -110,7 +106,6 @@ exports.login = async (req, res) => {
         message: "Email Or Password Don't Match",
       });
     }
-    console.log(process.env.SECRET_KEY);
     const token = jwt.sign(
       {
         id: checkEmail.id,
@@ -122,10 +117,9 @@ exports.login = async (req, res) => {
       status: "success",
       message: "resource successfully login",
       data: {
-        user: {
-          email: checkEmail.email,
-          token,
-        },
+        email: checkEmail.email,
+        role_id: checkEmail.role_id,
+        token,
       },
     });
   } catch (error) {

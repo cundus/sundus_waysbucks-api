@@ -8,8 +8,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      TransactionProduct.belongsToMany(models.Topping, {
-        through: "TransactionTopping",
+      TransactionProduct.belongsTo(models.Transaction, {
+        as: "order",
+      });
+
+      TransactionProduct.belongsTo(models.Product, {
+        as: "product",
+        foreignKey: {
+          name: "productId",
+        },
+      });
+
+      TransactionProduct.hasMany(models.TransactionTopping, {
+        foreignKey: {
+          name: "transactionProductId",
+        },
+        as: "toppings",
       });
       // define association here
     }
@@ -18,12 +32,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       transactionId: DataTypes.INTEGER,
       productId: DataTypes.INTEGER,
+      subtotal: DataTypes.INTEGER,
       quantity: DataTypes.INTEGER,
     },
     {
       sequelize,
       modelName: "TransactionProduct",
-      tableName: "transactionproducts",
+      tableName: "TransactionProducts",
     }
   );
   return TransactionProduct;

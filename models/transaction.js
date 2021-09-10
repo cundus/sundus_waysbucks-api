@@ -10,12 +10,17 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Transaction.belongsTo(models.User, {
-        as: "transaction",
-        foreignKey: "userId",
+        as: "userOrder",
+        foreignKey: {
+          name: "userId",
+        },
       });
 
-      Transaction.belongsToMany(models.Product, {
-        through: "TransactionProduct",
+      Transaction.hasMany(models.TransactionProduct, {
+        as: "order",
+        foreignKey: {
+          name: "transactionId",
+        },
       });
     }
   }
@@ -34,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Transaction",
-      tableName: "transactions",
+      tableName: "Transactions",
     }
   );
   return Transaction;

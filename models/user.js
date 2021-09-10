@@ -9,14 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasOne(models.Role, {
+      User.belongsTo(models.Role, {
         as: "Role",
-        foreignKey: "role_id",
+        foreignKey: {
+          name: "role_id",
+        },
       });
 
       User.hasMany(models.Transaction, {
         as: "userOrder",
-        foreignKey: "userId",
+        foreignKey: {
+          name: "userId",
+        },
       });
     }
   }

@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { User } = require("../../models");
 
 // Auth User
 exports.auth = async (req, res, next) => {
@@ -33,6 +34,31 @@ exports.auth = async (req, res, next) => {
       status: "failed",
       message: "Server Error",
       location: "Middleware",
+    });
+  }
+};
+
+exports.admin = async (req, res, next) => {
+  try {
+    const id = req.idUser;
+    const profile = await User.findOne({ where: { id: id } });
+    if (profile.role_id === 2) {
+      return res.status(401).send({
+        status: "Response fail",
+        error: {
+          message: "Access Denied",
+        },
+      });
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(401).send({
+      status: "Response fail",
+      error: {
+        message: "Invalid Access",
+      },
     });
   }
 };

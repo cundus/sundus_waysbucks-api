@@ -3,9 +3,9 @@ const { Role } = require("../../models");
 exports.addRole = async (req, res) => {
   try {
     const { body } = req;
+    console.log(body);
 
-    const newRole = await Role.create({ body });
-    console.log("ini New Role",newRole);
+    const newRole = await Role.create(body, {});
     res.status(200).send({
       status: "Sukses",
       data: newRole,
