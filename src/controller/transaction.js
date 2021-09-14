@@ -178,6 +178,63 @@ exports.getTransactions = async (req, res) => {
   }
 };
 
+exports.getTransaction = async (req, res) => {
+  try {
+    const transactions = await Transaction.findOne({
+      where: {
+        id: req.params.id,
+      },
+      attributes: {
+        exclude: ["userId", "createdAt", "updatedAt"],
+      },
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "userOrder",
+          attributes: ["id", "name", "email"],
+        },
+        {
+          model: TransactionProduct,
+          as: "order",
+          attributes: ["id", "quantity", "subtotal"],
+          include: [
+            {
+              model: Product,
+              as: "product",
+              attributes: ["title", "price", "image"],
+            },
+            {
+              model: TransactionTopping,
+              as: "toppings",
+              attributes: ["toppingId"],
+              include: [
+                {
+                  model: Topping,
+                  as: "toppings",
+                  attributes: ["title", "price", "image"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    res.send({
+      status: "success",
+      message: "Success Get Data",
+      data: transactions,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "Failed",
+      message: "Cannot Get Data",
+    });
+  }
+};
+
 exports.getTransactionsByUserId = async (req, res) => {
   try {
     const { idUser } = req;
@@ -185,7 +242,7 @@ exports.getTransactionsByUserId = async (req, res) => {
       where: {
         userId: idUser,
       },
-      attributes: ["id", "status", "total"],
+      attributes: ["id", "status", "total", "createdAt"],
       order: [["createdAt", "DESC"]],
       include: [
         {

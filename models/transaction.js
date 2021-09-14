@@ -34,6 +34,8 @@ module.exports = (sequelize, DataTypes) => {
       zipCode: DataTypes.INTEGER,
       attachment: DataTypes.STRING,
       status: DataTypes.STRING,
+      subTotal: DataTypes.INTEGER,
+      service: DataTypes.INTEGER,
       total: DataTypes.INTEGER,
     },
     {
