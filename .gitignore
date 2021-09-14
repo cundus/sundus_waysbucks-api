@@ -2,3 +2,6 @@ node_modules
 *.env
 coretan.txt
 uploads
+uploads/picture
+uploads/products
+uploads/transaction
